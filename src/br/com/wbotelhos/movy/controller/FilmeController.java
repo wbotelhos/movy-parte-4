@@ -11,7 +11,9 @@ import br.com.caelum.vraptor.Result;
 import br.com.caelum.vraptor.interceptor.download.Download;
 import br.com.caelum.vraptor.interceptor.download.FileDownload;
 import br.com.caelum.vraptor.interceptor.multipart.UploadedFile;
+import br.com.caelum.vraptor.view.Results;
 import br.com.wbotelhos.movy.model.Filme;
+import br.com.wbotelhos.movy.model.common.EntityWrapper;
 import br.com.wbotelhos.movy.repository.FilmeRepository;
 
 @Resource
@@ -70,6 +72,22 @@ public class FilmeController {
 		Collection<Filme> filmeList = repository.loadAll();
 
 		result.include("filmeList", filmeList);
+	}
+
+	@Get("/filme/gridy")
+	public void listByFilter(String search, int page, String sortName, String sortOrder, String find, int rows) {
+
+		Collection<Filme> filmeList = repository.listByFilter(search, page, sortName, sortOrder, find, rows);
+
+		int total = repository.countByFilter(search, find);
+
+		EntityWrapper<Filme> wrapper = new EntityWrapper<Filme>();
+		wrapper.setEntityList(filmeList);
+		wrapper.setTotal(total);
+
+		result.use(Results.json()).withoutRoot().from(wrapper)
+		.include("entityList")
+		.serialize();
 	}
 
 	@Get("/filme/novo")
