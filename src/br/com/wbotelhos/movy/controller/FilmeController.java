@@ -69,9 +69,7 @@ public class FilmeController {
 
 	@Get("/filme")
 	public void listagem() {
-		Collection<Filme> filmeList = repository.loadAll();
 
-		result.include("filmeList", filmeList);
 	}
 
 	@Get("/filme/gridy")
