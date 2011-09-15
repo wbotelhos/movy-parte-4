@@ -2,6 +2,7 @@ package br.com.wbotelhos.movy.business;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.util.Collection;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
@@ -19,7 +20,40 @@ import br.com.wbotelhos.movy.util.Upload;
 public class FilmeBusiness extends GenericBusiness<Filme> implements FilmeRepository {
 
 	public FilmeBusiness(EntityManager manager) {
-	  super(manager);
+		super(manager);
+	}
+
+	public Integer countByFilter(String search, String find) {
+		Query query = manager.createQuery("select count(e.id) from Filme e where e." + find + " like :search");
+		query.setParameter("search", "%" + search + "%");
+
+		return ((Long) query.getSingleResult()).intValue();
+	}
+
+	public Collection<Filme> listByFilter(String search, int page, String sortName, String sortOrder, String find, int rows) {
+		String sql = "from Filme e where e." + find + " like :search";
+		String order = " order by e." + find;
+
+		if (sortName != null && !sortName.isEmpty()) {
+			order = " order by e." + sortName;
+		}
+
+		if (sortOrder != null && !sortOrder.isEmpty()) {
+			order += " desc";
+		}
+
+		int inicio = (page - 1) * rows;
+
+		Query query = manager.createQuery(sql + order);
+		query.setFirstResult(inicio);
+		query.setMaxResults(rows);
+
+		query.setParameter("search", "%" + search + "%");
+
+		@SuppressWarnings("unchecked")
+		Collection<Filme> resultList = query.getResultList();
+
+		return resultList;
 	}
 
 	public void removeImage(Filme filme) throws Exception {
@@ -49,7 +83,7 @@ public class FilmeBusiness extends GenericBusiness<Filme> implements FilmeReposi
 
 		if (!Upload.isValidExtension(extension)) {
 			throw new Exception("Tipo de arquivo não permitido!\nUse: JPG, JPEG, GIF, BMP ou PNG.");
-		 }
+		}
 
 		filme.setImagem(filme.getId() + extension);
 
