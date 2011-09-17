@@ -1,3 +1,5 @@
 <h1>Movy</h1>
 
-Olá, seja bem vindo! <b>${sessionScope.userSession.user.nome}</b>
+<a href="${pageContext.request.contextPath}/translate/pt/br">BR</a>&nbsp; | <a href="${pageContext.request.contextPath}/translate/en/us">US</a>
+
+<fmt:message key="bem.vindo" /> <b>${userSession.user.nome}</b>
