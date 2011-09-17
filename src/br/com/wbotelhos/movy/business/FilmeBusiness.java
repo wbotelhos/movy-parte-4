@@ -39,7 +39,7 @@ public class FilmeBusiness extends GenericBusiness<Filme> implements FilmeReposi
 		}
 
 		if (sortOrder != null && !sortOrder.isEmpty()) {
-			order += " desc";
+			order += " " + sortOrder;
 		}
 
 		int inicio = (page - 1) * rows;

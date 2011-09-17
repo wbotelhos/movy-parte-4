@@ -74,7 +74,6 @@ public class FilmeController {
 
 	@Get("/filme/gridy")
 	public void listByFilter(String search, int page, String sortName, String sortOrder, String find, int rows) {
-
 		Collection<Filme> filmeList = repository.listByFilter(search, page, sortName, sortOrder, find, rows);
 
 		int total = repository.countByFilter(search, find);
