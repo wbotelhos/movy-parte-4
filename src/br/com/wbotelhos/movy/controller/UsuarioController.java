@@ -1,7 +1,10 @@
 package br.com.wbotelhos.movy.controller;
 
+import static br.com.caelum.vraptor.view.Results.referer;
+
 import java.io.File;
 import java.util.Collection;
+import java.util.Locale;
 
 import br.com.caelum.vraptor.Delete;
 import br.com.caelum.vraptor.Get;
@@ -12,6 +15,7 @@ import br.com.caelum.vraptor.interceptor.download.Download;
 import br.com.caelum.vraptor.interceptor.download.FileDownload;
 import br.com.caelum.vraptor.interceptor.multipart.UploadedFile;
 import br.com.wbotelhos.movy.annotation.Permission;
+import br.com.wbotelhos.movy.component.UserSession;
 import br.com.wbotelhos.movy.model.Usuario;
 import br.com.wbotelhos.movy.model.common.TipoPerfil;
 import br.com.wbotelhos.movy.repository.UsuarioRepository;
@@ -21,10 +25,12 @@ public class UsuarioController {
 
 	private final UsuarioRepository repository;
 	private final Result result;
+	private final UserSession userSession;
 
-	public UsuarioController(Result result, UsuarioRepository repository) {
+	public UsuarioController(Result result, UsuarioRepository repository, UserSession userSession) {
 		this.result = result;
 		this.repository = repository;
+		this.userSession = userSession;
 	}
 
 	@Get("/usuario/{usuario.id}/imagem")
@@ -116,4 +122,17 @@ public class UsuarioController {
 		.redirectTo(this).exibir(usuario);
 	}
 
+	@Get("/translate/{language}/{country}")
+	public void translateTo(String language, String country) {
+		try {
+			Locale.setDefault(new Locale(language, country));
+
+			userSession.setLanguage(language + "_" + country.toUpperCase());
+
+			result.use(referer()).redirect();
+		} catch (IllegalStateException e) {
+			result.redirectTo(IndexController.class).index();
+		}
+	}
+	
 }
