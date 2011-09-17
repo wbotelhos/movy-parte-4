@@ -6,12 +6,19 @@
 		<title><decorator:title default="Movy | A Movie Manager"/></title>
 
 		<link type="text/css" rel="stylesheet" href="${pageContext.request.contextPath}/css/common.css"/>
+		<link type="text/css" rel="stylesheet" href="${pageContext.request.contextPath}/css/jquery.gridy.css"/>
 		<link type="text/css" rel="stylesheet" href="${pageContext.request.contextPath}/css/jquery-ui-1.8.14.css"/>
 
 		<script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery-1.6.4.min.js"></script>
 		<script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery-ui-1.8.14.min.js"></script>
-		<script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery.tmpl.js"></script>
+		<script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery.tmpl.min.js"></script>
 		<script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery.gridy.min.js"></script>
+
+		<style type="text/css">
+			td {
+				font: 11px verdana !important;
+			}
+		</style>
 	</head>
 	<body>
 		<div id="topo"><jsp:include page="../../topo.jsp" /></div>
