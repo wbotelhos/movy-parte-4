@@ -10,12 +10,12 @@
 		$(function() {
 	
 			$('#gridy').gridy({
-				colsWidth:		[130, 130, 70, 60, 220, 90],
+				colsWidth:		[150, 150, 85, 100, 200, 100, 100, 98],
 				find:			'titulo',
 				headersName:	[['titulo', 'Título'], ['tituloOriginal', 'Title'], ['genero', 'Gênero'], ['ano', 'Ano'], ['sinopse', 'Sinopse']],
 				loading:		'${pageContext.request.contextPath}/img/loading.gif',
 				url:			'${pageContext.request.contextPath}/filme/gridy',
-				width:			900
+				width:			1000
 			});
 
 		});
