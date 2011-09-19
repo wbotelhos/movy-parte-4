@@ -28,6 +28,10 @@
 			<c:if test="${not empty error}">${error}</c:if>
 			<c:if test="${not empty message}">${message}</c:if>
 
+			<c:forEach var="error" items="${errors}">
+  				${error.category} - ${error.message}
+			</c:forEach>
+
 			<decorator:body/>
 		</div>
 

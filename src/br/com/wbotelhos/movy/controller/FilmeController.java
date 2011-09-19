@@ -8,6 +8,7 @@ import br.com.caelum.vraptor.Get;
 import br.com.caelum.vraptor.Post;
 import br.com.caelum.vraptor.Resource;
 import br.com.caelum.vraptor.Result;
+import br.com.caelum.vraptor.Validator;
 import br.com.caelum.vraptor.interceptor.download.Download;
 import br.com.caelum.vraptor.interceptor.download.FileDownload;
 import br.com.caelum.vraptor.interceptor.multipart.UploadedFile;
@@ -21,10 +22,12 @@ public class FilmeController {
 
 	private final FilmeRepository repository;
 	private final Result result;
+	private final Validator validator;
 
-	public FilmeController(Result result, FilmeRepository repository) {
+	public FilmeController(Result result, FilmeRepository repository, Validator validator) {
 		this.result = result;
 		this.repository = repository;
+		this.validator = validator;
 	}
 
 	@Get("/filme/{filme.id}/imagem")
@@ -58,6 +61,8 @@ public class FilmeController {
 
 	@Post("/filme/{filme.id}/imagem")
 	public void uploadImage(UploadedFile file, Filme filme) {
+		validator.onErrorRedirectTo(this).exibir(filme);
+
 		try {
 			repository.uploadImage(file, filme);
 		} catch (Exception e) {
