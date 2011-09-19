@@ -2,6 +2,10 @@ package br.com.wbotelhos.movy.model;
 
 import javax.persistence.Entity;
 
+import org.hibernate.validator.Length;
+import org.hibernate.validator.NotEmpty;
+import org.hibernate.validator.NotNull;
+
 import br.com.wbotelhos.movy.model.common.AbstractEntity;
 
 @Entity
@@ -12,6 +16,10 @@ public class Filme extends AbstractEntity {
 	public static final String IMAGE_PATH = "/Users/botelho/movy/img/filme";
 
 	private Integer ano;
+
+	@NotNull
+	@NotEmpty
+	@Length(min = 3, max = 255)
 	private String titulo;
 	private String tituloOriginal;
 	private String genero;

@@ -1,6 +1,11 @@
 package br.com.wbotelhos.movy.controller;
 
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.lessThan;
+import static org.hamcrest.Matchers.notNullValue;
+
 import java.io.File;
+import java.util.Calendar;
 import java.util.Collection;
 
 import br.com.caelum.vraptor.Delete;
@@ -9,9 +14,11 @@ import br.com.caelum.vraptor.Post;
 import br.com.caelum.vraptor.Resource;
 import br.com.caelum.vraptor.Result;
 import br.com.caelum.vraptor.Validator;
+import br.com.caelum.vraptor.core.Localization;
 import br.com.caelum.vraptor.interceptor.download.Download;
 import br.com.caelum.vraptor.interceptor.download.FileDownload;
 import br.com.caelum.vraptor.interceptor.multipart.UploadedFile;
+import br.com.caelum.vraptor.validator.Validations;
 import br.com.caelum.vraptor.view.Results;
 import br.com.wbotelhos.movy.model.Filme;
 import br.com.wbotelhos.movy.model.common.EntityWrapper;
@@ -23,11 +30,13 @@ public class FilmeController {
 	private final FilmeRepository repository;
 	private final Result result;
 	private final Validator validator;
+	private final Localization localization;
 
-	public FilmeController(Result result, FilmeRepository repository, Validator validator) {
+	public FilmeController(Result result, FilmeRepository repository, Validator validator, Localization localization) {
 		this.result = result;
 		this.repository = repository;
 		this.validator = validator;
+		this.localization = localization;
 	}
 
 	@Get("/filme/{filme.id}/imagem")
@@ -120,8 +129,24 @@ public class FilmeController {
 	}
 
 	@Post("/filme")
-	public void salvar(Filme filme) {
-		filme = repository.save(filme);
+	public void salvar(final Filme filme) {
+		validator.validate(filme);
+
+		validator.checking(new Validations(localization.getBundle()) {{
+			if (that(filme, is(notNullValue()), "filme", "filme.nulo")) {
+				final int anoAtual = Calendar.getInstance().get(Calendar.YEAR);
+
+				that(filme.getAno(), lessThan(anoAtual), i18n("ano"), "deve.ser.menor.que", i18n("ano"), String.valueOf(anoAtual));
+			}
+	    }});
+
+		validator.onErrorUsePageOf(this).novo();
+
+		if (filme.getId() == null) {
+			filme.setImagem("default.jpg");
+		}
+
+		repository.save(filme);
 
 		result
 		.include("message", "Filme salvo com sucesso!")
